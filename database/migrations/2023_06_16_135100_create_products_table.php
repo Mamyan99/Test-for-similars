@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->integer('popularity');
+            $table->string('name')->fulltext();
+            $table->integer('popularity')->index();
             $table->timestamps();
         });
     }
