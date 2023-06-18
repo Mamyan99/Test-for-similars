@@ -14,6 +14,9 @@ class ProductReadRepository implements ProductReadRepositoryInterface
         return Product::query();
     }
 
+    /**
+     * @throws ProductNotFoundException
+     */
     public function getById(int $productId): Product
     {
         $product = $this->query()
@@ -33,15 +36,14 @@ class ProductReadRepository implements ProductReadRepositoryInterface
 
         $query->where(function (Builder $query) use ($names) {
             foreach ($names as $name) {
-                $query->orWhere('name', 'like', "%$name%");
+                $query->orWhereRaw("CONCAT(' ', name, ' ') LIKE '% $name %'");
             }
         });
 
         return $query->inRandomOrder()
             ->orderByDesc('popularity')
             ->limit($limit)
-            ->select('id')
-            ->get();
+            ->get(['id']);
     }
 
     public function getProductsWithPopularity(array $ignoreIds, int $limit): Collection
@@ -52,8 +54,7 @@ class ProductReadRepository implements ProductReadRepositoryInterface
             ->inRandomOrder()
             ->orderByDesc('popularity')
             ->limit($limit)
-            ->select('id')
-            ->get();
+            ->get(['id']);
     }
 
     public function getRandomProducts(array $ignoreIds, int $limit): Collection
@@ -62,7 +63,6 @@ class ProductReadRepository implements ProductReadRepositoryInterface
             ->whereNotIn('id', $ignoreIds)
             ->inRandomOrder()
             ->limit($limit)
-            ->select('id')
-            ->get();
+            ->get(['id']);
     }
 }
