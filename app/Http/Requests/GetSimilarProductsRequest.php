@@ -7,9 +7,10 @@ use Illuminate\Foundation\Http\FormRequest;
 class GetSimilarProductsRequest extends FormRequest
 {
     const PRODUCT_ID = 'id';
+
     public function authorize()
     {
-        // No need yet
+        //ToDo: Need to add authorization;
         return true;
     }
 

@@ -2,10 +2,8 @@
 
 namespace App\Services\Product\Actions;
 
-use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use App\Repositories\Read\ProductReadRepositoryInterface;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class GetSimilarProductsAction
 {

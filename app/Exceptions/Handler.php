@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\Response;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -41,6 +42,29 @@ class Handler extends ExceptionHandler
      *
      * @return void
      */
+
+    public function render($request, Throwable $exception)
+    {
+        $httpCode = Response::HTTP_INTERNAL_SERVER_ERROR;
+        $statusCode =  $exception->getCode();
+        $details = [
+            'message' => $exception->getMessage(),
+        ];
+
+        if ($exception instanceof BusinessLogicException) {
+            $httpCode = $exception->getHttpStatusCode();
+            $statusCode = $exception->getStatus();
+            $details['message'] = $exception->getStatusMessage();
+        }
+
+        $data = [
+            'status'  => $statusCode,
+            'errors' => $details,
+        ];
+
+        return response()->json($data, $httpCode);
+    }
+
     public function register()
     {
         $this->reportable(function (Throwable $e) {
