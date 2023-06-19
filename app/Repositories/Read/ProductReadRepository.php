@@ -40,8 +40,8 @@ class ProductReadRepository implements ProductReadRepositoryInterface
             }
         });
 
-        return $query->inRandomOrder()
-            ->orderByDesc('popularity')
+        return $query
+            ->orderByRaw('RAND() * (1 + popularity) DESC')
             ->limit($limit)
             ->get(['id']);
     }
@@ -51,8 +51,7 @@ class ProductReadRepository implements ProductReadRepositoryInterface
         return $this->query()
             ->whereNotIn('id', $ignoreIds)
             ->where('popularity', '!=' , 0)
-            ->inRandomOrder()
-            ->orderByDesc('popularity')
+            ->orderByRaw('RAND() * popularity DESC')
             ->limit($limit)
             ->get(['id']);
     }
